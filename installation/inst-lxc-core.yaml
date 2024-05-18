@@ -1,7 +1,7 @@
 ---
 - name: Install core packages for lxc containers
   hosts: all
-  become: true
+  # become: true
   gather_facts: False
 
   tasks:
