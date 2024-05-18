@@ -2,13 +2,14 @@
 - name: Install core packages for virtual machines
   hosts: "{{ my_hosts | d([]) }}"
   become: true
+  gather_facts: False
 
   tasks:
     - name: Install packages
       ansible.builtin.apt:
         name:
-          - prometheus-node-exporter
-          - nfs-common
+          - ufw
+          - unattende-upgrades
           - qemu-guest-agent
         update_cache: true
 
