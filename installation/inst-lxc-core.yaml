@@ -1,6 +1,6 @@
 ---
 - name: Install core packages for lxc containers
-  hosts: "{{ my_hosts | d([]) }}"
+  hosts: all
   become: true
   gather_facts: False
 
