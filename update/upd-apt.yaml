@@ -1,6 +1,7 @@
 ---
 - name: Update and upgrade apt packages
   hosts: all
+  gather_facts: False
 
   tasks:
     - name: Update packages with apt
