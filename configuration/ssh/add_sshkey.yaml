@@ -1,0 +1,9 @@
+---
+- name: Add sshkey
+- hosts: all
+  tasks:
+    - authorized_key:
+        # user: {{ item.user }}
+        state: present
+        manage_dir: yes
+        key: "{{ lookup('file', '~/.ssh/*.pub') }}"
