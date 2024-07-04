@@ -25,13 +25,13 @@
         path: ~/docker_postgres_backups/postgres_backup.sh
         mode: '0755'
 
-    - name: Set up cron job for postgres_backup.sh
-      cron:
-        name: "Postgres backup"
-        user: "{{ user }}"
-        minute: "0"
-        hour: "2"
-        day: "*"
-        month: "*"
-        weekday: "*"
-        job: "/bin/bash {{ user_home }}/docker_postgres_backups/postgres_backup.sh"
+    # - name: Set up cron job for postgres_backup.sh
+      # cron:
+        # name: "Postgres backup"
+        # user: "{{ user }}"
+        # minute: "0"
+        # hour: "2"
+        # day: "*"
+        # month: "*"
+        # weekday: "*"
+        # job: "/bin/bash {{ user_home }}/docker_postgres_backups/postgres_backup.sh"
