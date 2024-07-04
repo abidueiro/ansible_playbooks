@@ -28,7 +28,7 @@
     - name: Set up cron job for postgres_backup.sh
       cron:
         name: "Postgres backup"
-        user: "cron_user"
+        user: "{{ cron_user }}"
         minute: "0"
         hour: "2"
         day: "*"
