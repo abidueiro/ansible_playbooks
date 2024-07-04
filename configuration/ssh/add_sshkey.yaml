@@ -4,11 +4,6 @@
   gather_facts: False
 
   tasks:
-    #- authorized_key:
-    #    # user: {{ user }}
-    #    state: present
-    #    manage_dir: yes
-    #    key: "{{ lookup('file', '/home/semaphore/.ssh/id_rsa.pub') }}"
     - name: put pubkey
       lineinfile:
         path: "~/.ssh/authorized_keys"
