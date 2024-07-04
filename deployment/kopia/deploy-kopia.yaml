@@ -9,7 +9,7 @@
   tasks:
     - name: Git clone
       git:
-        repo: https://github.com/CiclicaTeam/docker_postgres_backups
+        repo: git@github.com:CiclicaTeam/docker_postgres_backups.git
         dest: ~/
         accept_hostkey: yes
         key_file: ~/.ssh/id_rsa
