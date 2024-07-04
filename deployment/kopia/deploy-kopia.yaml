@@ -7,6 +7,12 @@
   gather_facts: false
 
   tasks:
+    - name: Debug user and user_home variables
+      debug:
+        msg:
+          - "user: {{ user }}"
+          - "user_home: {{ user_home }}"
+
     - name: Git clone private repo
       git:
         repo: git@github.com:CiclicaTeam/docker_postgres_backups.git
