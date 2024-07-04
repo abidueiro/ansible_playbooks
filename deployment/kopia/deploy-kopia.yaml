@@ -10,7 +10,7 @@
     - name: Debug user and user_home variables
       debug:
         msg:
-          - "user: {{ username }}"
+          # - "user: {{ username }}"
           - "user_home: {{ user_home }}"
 
     - name: Git clone private repo
