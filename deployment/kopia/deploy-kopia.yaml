@@ -10,6 +10,6 @@
     - name: Git clone
       git:
         repo: git@github.com:CiclicaTeam/docker_postgres_backups.git
-        dest: ~/
+        dest: ~/docker_postgres_backups
         accept_hostkey: yes
         key_file: ~/.ssh/id_rsa
