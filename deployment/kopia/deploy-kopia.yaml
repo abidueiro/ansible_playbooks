@@ -1,0 +1,15 @@
+---
+- name: Clone a private Git repository
+  hosts: all
+  become: true
+  become_method: sudo
+  become_user: root
+  gather_facts: false
+
+  tasks:
+    - name: Git clone
+      git:
+        repo: https://github.com/CiclicaTeam/docker_postgres_backups
+        dest: ~/
+        accept_hostkey: yes
+        key_file: ~/.ssh/id_rsa
