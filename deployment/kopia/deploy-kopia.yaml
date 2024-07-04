@@ -1,5 +1,5 @@
 ---
-- name: Clone a private Git repository
+- name: Set up Docker postgres backups
   hosts: all
   # become: true
   # become_method: sudo
@@ -7,9 +7,25 @@
   gather_facts: false
 
   tasks:
-    - name: Git clone
+    - name: Git clone private repo
       git:
         repo: git@github.com:CiclicaTeam/docker_postgres_backups.git
         dest: ~/docker_postgres_backups
         accept_hostkey: yes
         key_file: ~/.ssh/id_rsa
+
+    - name: Set postgres_backup.sh as executable
+      file:
+        path: ~/docker_postgres_backups/postgres_backup.sh
+        mode: '0755'
+
+    - name: Set up cron job for postgres_backup.sh
+      cron:
+        name: "Postgres backup"
+        user: {{ user }}
+        minute: "0"
+        hour: "2"
+        day: "*"
+        month: "*"
+        weekday: "*"
+        job: "/bin/bash {{ user_home }}/docker_postgres_backups/postgres_backup.sh"
