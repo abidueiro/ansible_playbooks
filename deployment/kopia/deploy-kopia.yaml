@@ -15,27 +15,27 @@
     - name: Include var encripted file
       include_vars: /home/semaphore/postgres-vault.yaml
 
+    - name: Include var encrypted file
+      include_vars: /home/semaphore/postgres-vault.yaml
+
     - name: Set host-specific variables
       set_fact:
-        # db_host: "{{ host_vars[inventory_hostname].db_host }}"
-        # db_pass: "{{ host_vars[inventory_hostname].db_pass }}"
-        set_fact:
-          db_user: "{{ host_vars[inventory_hostname].db_user }}"
-          db_pass: "{{ host_vars[inventory_hostname].db_pass }}"
+        db_user: "{{ host_vars[inventory_hostname].db_user }}"
+        db_pass: "{{ host_vars[inventory_hostname].db_pass }}"
 
     - name: Debug host-specific variables
       debug:
         msg:
-          - "db_user: {{ ansible_facts.db_user }}"
-          - "db_pass: {{ ansible_facts.db_pass }}"
+          - "db_user: {{ db_user }}"
+          - "db_pass: {{ db_pass }}"
 
-    - name: Create .env file from template
+    - name: Generate host-env file
       template:
         src: host-env.j2
         dest: "~/docker_postgres_backups/.env"
       vars:
-        db_user: "{{ ansible_facts.db_user }}"
-        db_pass: "{{ ansible_facts.db_pass }}"
+        db_user: "{{ db_user }}"
+        db_pass: "{{ db_pass }}"
 
     - name: Git clone private repo
       git:
