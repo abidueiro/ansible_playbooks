@@ -12,4 +12,4 @@
         msg:
           #- "user: {{ cron_user }}"
           #- "user_home: {{ user_home }}"
-          - "db": {{ db1 }}
+          - "db: {{ db1 }}"
