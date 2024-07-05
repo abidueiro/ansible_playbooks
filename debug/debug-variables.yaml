@@ -5,7 +5,7 @@
 
   tasks:
     - name: Include var encripted file
-      include_vars: ~/postgres-vault.yaml
+      include_vars: /home/semaphore/postgres-vault.yaml
 
     - name: Debug variables
       debug:
