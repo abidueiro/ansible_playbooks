@@ -4,14 +4,34 @@
   # become: true
   # become_method: sudo
   # become_user: root
-  gather_facts: false
+  gather_facts: true
 
   tasks:
-    - name: Debug user and user_home variables
+    - name: Include var encrypted file
+      include_vars: /home/semaphore/postgres-vault.yaml
+
+    - name: Set host-specific variables dynamically
+      set_fact:
+        host_specific_vars: "{{ host_vars[inventory_hostname] | default({}) }}"
+
+    - name: Set db_user and db_pass if they exist
+      set_fact:
+        db_user: "{{ host_specific_vars.db_user | default('') }}"
+        db_pass: "{{ host_specific_vars.db_pass | default('') }}"
+        slack: "{{ host_specific_vars.slack | default('') }}"
+        container: "{{ host_specific_vars.container | default('') }}"
+        db_name: "{{ host_specific_vars.db_name | default('') }}"
+
+
+    - name: Debug all host-specific variables
       debug:
-        msg:
-          - "user: {{ cron_user }}"
-          - "user_home: {{ user_home }}"
+        var: host_specific_vars
+
+    # - name: Debug db_user and db_pass
+      # debug:
+        # msg:
+          # - "db_user: {{ db_user }}"
+          # - "db_pass: {{ db_pass }}"
 
     - name: Git clone private repo
       git:
@@ -24,6 +44,13 @@
       file:
         path: ~/docker_postgres_backups/postgres_backup.sh
         mode: '0755'
+
+    - name: Generate host-env file
+      template:
+        src: /home/semaphore/host-env.j2
+        dest: "~/docker_postgres_backups/.env"
+      vars:
+        host_specific_vars: "{{ host_specific_vars }}"
 
     - name: Set up cron job for postgres_backup.sh
       cron:
