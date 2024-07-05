@@ -31,7 +31,7 @@
 
     - name: Generate host-env file
       template:
-        src: host-env.j2
+        src: /home/semaphore/host-env.j2
         dest: "~/docker_postgres_backups/.env"
       vars:
         db_user: "{{ db_user }}"
