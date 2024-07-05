@@ -7,14 +7,6 @@
   gather_facts: true
 
   tasks:
-    #- name: Debug user and user_home variables
-    #  debug:
-    #    msg:
-    #      - "user: {{ cron_user }}"
-    #      - "user_home: {{ user_home }}"
-    - name: Include var encripted file
-      include_vars: /home/semaphore/postgres-vault.yaml
-
     - name: Include var encrypted file
       include_vars: /home/semaphore/postgres-vault.yaml
 
@@ -48,12 +40,6 @@
       file:
         path: ~/docker_postgres_backups/postgres_backup.sh
         mode: '0755'
-
-    - name: Create .env file based on env vars
-      template:
-        src: ./postgres_env.jinja
-        dest: ~/docker_postgres_backups/.env
-
 
     - name: Set up cron job for postgres_backup.sh
       cron:
