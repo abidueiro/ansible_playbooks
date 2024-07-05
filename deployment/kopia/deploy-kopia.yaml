@@ -29,13 +29,6 @@
           - "db_user: {{ db_user }}"
           - "db_pass: {{ db_pass }}"
 
-    - name: Generate host-env file
-      template:
-        src: /home/semaphore/host-env.j2
-        dest: "~/docker_postgres_backups/.env"
-      vars:
-        host_specific_vars: "{{ host_specific_vars }}"
-
     - name: Git clone private repo
       git:
         repo: git@github.com:CiclicaTeam/docker_postgres_backups.git
@@ -47,6 +40,13 @@
       file:
         path: ~/docker_postgres_backups/postgres_backup.sh
         mode: '0755'
+
+    - name: Generate host-env file
+      template:
+        src: /home/semaphore/host-env.j2
+        dest: "~/docker_postgres_backups/.env"
+      vars:
+        host_specific_vars: "{{ host_specific_vars }}"
 
     - name: Set up cron job for postgres_backup.sh
       cron:
