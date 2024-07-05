@@ -19,8 +19,8 @@
       set_fact:
         # db_host: "{{ host_vars[inventory_hostname].db_host }}"
         # db_pass: "{{ host_vars[inventory_hostname].db_pass }}"
-        db_host: "{{ postgres-vault.db_user }}"
-        db_pass: "{{ postgres-vault.db_pass }}"
+        db_host: "{{ db_user }}"
+        db_pass: "{{ db_pass }}"
 
     - name: Create .env file from template
       template:
