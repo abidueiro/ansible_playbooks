@@ -1,0 +1,15 @@
+---
+- name: Debug variables
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Include var encripted file
+      include_vars: ~/postgres-vault.yaml
+
+    - name: Debug variables
+      debug:
+        msg:
+          #- "user: {{ cron_user }}"
+          #- "user_home: {{ user_home }}"
+          - "db": {{ db1 }}
