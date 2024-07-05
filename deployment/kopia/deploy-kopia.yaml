@@ -10,18 +10,24 @@
     - name: Include var encrypted file
       include_vars: /home/semaphore/postgres-vault.yaml
 
-    # - name: Set host-specific variables
-      # # set_fact:
-        # # db_user: "{{ host_vars[inventory_hostname].db_user }}"
-        # # db_pass: "{{ host_vars[inventory_hostname].db_pass }}"
-
     - name: Set host-specific variables dynamically
       set_fact:
         host_specific_vars: "{{ host_vars[inventory_hostname] | default({}) }}"
 
+    - name: Set db_user and db_pass if they exist
+      set_fact:
+        db_user: "{{ host_specific_vars.db_user | default('') }}"
+        db_pass: "{{ host_specific_vars.db_pass | default('') }}"
+
     - name: Debug all host-specific variables
       debug:
         var: host_specific_vars
+
+    - name: Debug db_user and db_pass
+      debug:
+        msg:
+          - "db_user: {{ db_user }}"
+          - "db_pass: {{ db_pass }}"
 
     - name: Generate host-env file
       template:
