@@ -4,8 +4,8 @@
   gather_facts: false
 
   tasks:
-    # - name: Include var encripted file
-      # include_vars: ~/postgres-vault.yaml
+    - name: Include var encripted file
+      include_vars: ~/postgres-vault.yaml
 
     - name: Debug variables
       debug:
