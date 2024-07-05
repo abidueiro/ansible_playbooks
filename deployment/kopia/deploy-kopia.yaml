@@ -19,8 +19,9 @@
       set_fact:
         # db_host: "{{ host_vars[inventory_hostname].db_host }}"
         # db_pass: "{{ host_vars[inventory_hostname].db_pass }}"
-        db_host: "{{ db_user }}"
-        db_pass: "{{ db_pass }}"
+        set_fact:
+          db_user: "{{ host_vars[inventory_hostname].db_user }}"
+          db_pass: "{{ host_vars[inventory_hostname].db_pass }}"
 
     - name: Create .env file from template
       template:
