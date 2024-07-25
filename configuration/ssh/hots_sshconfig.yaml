@@ -16,8 +16,8 @@
         path: "~/.ssh"
         state: directory
         mode: '0700'
-        owner: {{ user }}
-        group: {{ user }}
+        owner: "{{ user }}"
+        group: "{{ user }}"
       run_once: true
 
     - name: Generate .ssh/config file
@@ -25,14 +25,14 @@
         src: config-ssh.j2
         dest: "~/.ssh/config"
         mode: '0600'
-        owner: {{ user }}
-        group: {{ user }}
+        owner: "{{ user }}"
+        group: "{{ user }}"
       run_once: true
 
     - name: Ensure correct permissions on the private key
       file:
         path: "~/.ssh/id_rsa"
         mode: '0600'
-        owner: {{ user }}
-        group: {{ user }}
+        owner: "{{ user }}"
+        group: "{{ user }}"
       run_once: true
