@@ -3,6 +3,9 @@
   hosts: all
   gather_facts: no
   tasks:
+    - name: Include var encrypted file
+      include_vars: /home/semaphore/sshkey-vault.yaml
+
     - name: Set host-specific variables dynamically
       set_fact:
         host_specific_vars: "{{ host_vars[inventory_hostname] | default({}) }}"
