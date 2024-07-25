@@ -1,7 +1,7 @@
 ---
 - name: Generate .ssh/config for multiple hosts
   hosts: all
-  gather_facts: no
+  gather_facts: true
   tasks:
     - name: Include var encrypted file
       include_vars: /home/semaphore/files/sshkey-vault.yaml
