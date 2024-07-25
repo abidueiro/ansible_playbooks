@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
     - name: Include var encrypted file
-      include_vars: /home/semaphore/sshkey-vault.yaml
+      include_vars: /home/semaphore/files/sshkey-vault.yaml
 
     - name: Set host-specific variables dynamically
       set_fact:
