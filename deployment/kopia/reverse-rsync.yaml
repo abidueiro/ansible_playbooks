@@ -18,7 +18,7 @@
     - name: Rsync backups from remote servers
       synchronize:
         src: "{{ item.user }}@{{ item.ip }}:{{ remote_path }}/"
-        dest: "/tmp/semaphore/kopia/backups/{{ item.name }}/"
+        dest: "~/kopia/backups/{{ item.name }}/"
         mode: pull
         delete: no
         use_ssh_args: yes
