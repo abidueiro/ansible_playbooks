@@ -17,14 +17,14 @@
 
     - name: Rsync backups from remote servers
       synchronize:
-        src: "{{ remote_path }}"
-        dest: "~/kopia/backups/{{ item.name }}"
+        src: "/home/ciclica_admin/docker_postgres_backups/db_backup/"
+        dest: "~/kopia/backups/{{ item.name }}/"
         mode: pull
         delete: no
         use_ssh_args: yes
       vars:
-        ansible_ssh_user: "{{ item.user }}"
         ansible_host: "{{ item.ip }}"
+        ansible_user: "{{ item.user }}"
       loop: "{{ ssh_hosts }}"
       register: rsync_result
 
