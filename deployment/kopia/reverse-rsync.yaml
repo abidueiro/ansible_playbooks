@@ -2,10 +2,13 @@
 - name: Rsync backups from remote servers
   hosts: localhost
   gather_facts: false
-  vars_files:
-    - rsync_vault.yml
+  # vars_files:
+  #   - rsync_vault.yml
 
   tasks:
+    - name: Include var encrypted file
+      include_vars: /home/semaphore/files/sshkey-vault.yaml
+
     - name: Ensure specific backup directories exist
       file:
         path: "/home/ciclica_admin/kopia/backups/{{ item.name }}"
