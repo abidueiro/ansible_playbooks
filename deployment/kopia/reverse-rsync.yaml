@@ -1,6 +1,6 @@
 ---
 - name: Rsync backups from remote servers
-  hosts: all
+  hosts: 10.8.0.114
   gather_facts: true
   tasks:
     - name: Include var encrypted file
@@ -21,10 +21,7 @@
         dest: "~/kopia/backups/{{ item.name }}"
         mode: pull
         delete: no
-        rsync_opts:
-          - "--archive"
-          - "--verbose"
-          - "--compress"
+        use_ssh_args: yes
       vars:
         ansible_ssh_user: "{{ item.user }}"
         ansible_host: "{{ item.ip }}"
