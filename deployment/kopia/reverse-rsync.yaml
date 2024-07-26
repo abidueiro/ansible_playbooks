@@ -1,7 +1,7 @@
 ---
 - name: Rsync backups from remote servers
-  hosts: localhost
-  gather_facts: false
+  hosts: all
+  gather_facts: true
   # vars_files:
   #   - rsync_vault.yml
 
