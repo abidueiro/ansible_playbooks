@@ -17,13 +17,13 @@
         state: directory
         mode: '0755'
         owner: "{{ ansible_user }}"
-        group: ciclica_admin"{{ ansible_user }}"
+        group: "{{ ansible_user }}"
       loop: "{{ ssh_hosts }}"
 
     - name: Rsync backups from remote servers
       synchronize:
         src: "{{ remote_path }}"
-        dest: "/home/ciclica_admin/kopia/backups/{{ item.name }}"
+        dest: "~/kopia/backups/{{ item.name }}"
         mode: pull
         delete: no
         rsync_opts:
