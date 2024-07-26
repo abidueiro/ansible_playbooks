@@ -34,7 +34,7 @@
 
     - name: Generate .ssh/config file
       template:
-        src: config-ssh.j2
+        src: /home/semaphore/files/config-ssh.j2
         dest: "~/.ssh/config"
         mode: '0600'
         owner: "{{ ansible_user }}"
