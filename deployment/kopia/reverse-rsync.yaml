@@ -7,7 +7,7 @@
 
   tasks:
     - name: Include var encrypted file
-      include_vars: /home/semaphore/postgres-vault.yaml
+      include_vars: /home/semaphore/files/sshkey-vault.yaml
 
     - name: Ensure local backup directories exist
       file:
