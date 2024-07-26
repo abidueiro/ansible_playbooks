@@ -2,16 +2,11 @@
 - name: Rsync backups from remote servers
   hosts: all
   gather_facts: true
-  # vars_files:
-  #   - rsync_vault.yml
-
   tasks:
     - name: Include var encrypted file
       include_vars: /home/semaphore/files/sshkey-vault.yaml
 
     - name: Ensure specific backup directories exist
-      become: yes
-      become_user: "{{ ansible_user }}"
       file:
         path: "~/kopia/backups/{{ item.name }}"
         state: directory
@@ -30,9 +25,9 @@
           - "--archive"
           - "--verbose"
           - "--compress"
-      delegate_to: "{{ item.ip }}"
       vars:
-        ansible_user: "{{ item.user }}"
+        ansible_ssh_user: "{{ item.user }}"
+        ansible_host: "{{ item.ip }}"
       loop: "{{ ssh_hosts }}"
       register: rsync_result
 
@@ -42,7 +37,7 @@
         method: POST
         body_format: json
         body:
-          text: "Rsync completed {% if item.rc == 0 %}successfully{% else %}with errors{% endif %} from {{ item.item.name }} ({{ item.item.ip }}) to /home/ciclica_admin/kopia/backups/{{ item.item.name }}"
+          text: "Rsync completed {% if item.rc == 0 %}successfully{% else %}with errors{% endif %} from {{ item.item.name }} ({{ item.item.ip }}) to ~/kopia/backups/{{ item.item.name }}"
       loop: "{{ rsync_result.results }}"
       when: slack_webhook_url is defined
 
