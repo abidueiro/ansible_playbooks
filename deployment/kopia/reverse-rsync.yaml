@@ -16,16 +16,12 @@
       loop: "{{ ssh_hosts }}"
 
     - name: Rsync backups from remote servers
-      ansible.posix.synchronize:
-        src: "{{ remote_path }}/"
+      synchronize:
+        src: "{{ item.user }}@{{ item.ip }}:{{ remote_path }}/"
         dest: "~/kopia/backups/{{ item.name }}/"
         mode: pull
         delete: no
         use_ssh_args: yes
-      vars:
-        ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-        ansible_host: "{{ item.ip }}"
-        ansible_user: "{{ item.user }}"
       loop: "{{ ssh_hosts }}"
       delegate_to: 10.8.0.114
       register: rsync_result
