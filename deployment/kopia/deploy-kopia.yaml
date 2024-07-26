@@ -16,12 +16,13 @@
 
     - name: Set db_user and db_pass if they exist
       set_fact:
+        # KOPIA
+        container: "{{ host_specific_vars.container | default('') }}"
+        db_name: "{{ host_specific_vars.db_name | default('') }}"
         db_user: "{{ host_specific_vars.db_user | default('') }}"
         db_pass: "{{ host_specific_vars.db_pass | default('') }}"
         slack: "{{ host_specific_vars.slack | default('') }}"
-        container: "{{ host_specific_vars.container | default('') }}"
-        db_name: "{{ host_specific_vars.db_name | default('') }}"
-
+        # PROMTAIL
 
     - name: Debug all host-specific variables
       debug:
