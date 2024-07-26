@@ -8,7 +8,7 @@
 
     - name: Ensure specific backup directories exist
       file:
-        path: "~/kopia/backups/{{ item.name }}"
+        path: "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}"
         state: directory
         mode: '0755'
         owner: "{{ ansible_user }}"
@@ -18,7 +18,7 @@
     - name: Rsync backups from remote servers
       synchronize:
         src: "{{ item.user }}@{{ item.ip }}:{{ remote_path }}/"
-        dest: "~/kopia/backups/{{ item.name }}/"
+        dest: "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}/"
         mode: pull
         delete: no
         use_ssh_args: yes
@@ -30,7 +30,7 @@
           - "--progress"
           - "--stats"
           - "--exclude='.tmp'"
-          - "--timeout=300"
+          - "--timeout=600"  # Increased timeout
       loop: "{{ ssh_hosts }}"
       delegate_to: 10.8.0.114
       register: rsync_result
