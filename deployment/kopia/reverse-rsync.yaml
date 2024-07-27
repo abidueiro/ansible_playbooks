@@ -2,6 +2,12 @@
 - name: Rsync backups from remote servers
   hosts: 10.8.0.114
   gather_facts: true
+  vars_files:
+    - /home/semaphore/files/sshkey-vault.yaml
+
+  vars:
+    #ssh_key_path: "/home/{{ ansible_user }}/.ssh/id_rsa"
+
   tasks:
     - name: Include var encrypted file
       include_vars: /home/semaphore/files/sshkey-vault.yaml
@@ -15,46 +21,25 @@
         group: "{{ ansible_user }}"
       loop: "{{ ssh_hosts }}"
 
-    - name: Ensure the known_hosts file exists
-      file:
-        path: "~/.ssh/known_hosts"
-        state: touch
-        mode: '0644'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-      run_once: true
-
-    - name: Accept SSH host key for each host
-      known_hosts:
-        name: "{{ item.ip }}"
-        key: "{{ lookup('pipe', 'ssh-keyscan -H ' + item.ip) }}"
-        path: "~/.ssh/known_hosts"
-      with_items: "{{ ssh_hosts }}"
-      run_once: true
-
     - name: Rsync backups from remote servers
-      synchronize:
-        src: "{{ item.user }}@{{ item.ip }}:{{ remote_path }}/"
-        dest: "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}/"
-        mode: pull
-        delete: no
-        use_ssh_args: yes
-        rsync_opts:
-          - "--compress"
-          - "--archive"
-          - "--verbose"
-          - "--human-readable"
-          - "--progress"
-          - "--stats"
-          - "--exclude='.tmp'"
-          - "--partial"
-        rsync_timeout: 10800
+      command:
+        cmd: >
+          rsync -avzz
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          --timeout=10800
+          --partial
+          --progress
+          --stats
+          --human-readable
+          --exclude='.tmp'
+          "{{ item.user }}@{{ item.ip }}:{{ remote_path }}/"
+          "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}/"
       loop: "{{ ssh_hosts }}"
-      delegate_to: 10.8.0.114
       register: rsync_result
       retries: 3
       delay: 60
       until: rsync_result.rc == 0
+      delegate_to: 10.8.0.114
 
     - name: Send Slack notification
       uri:
@@ -73,4 +58,4 @@
 
     - name: Display rsync command output
       debug:
-        var: rsync_result.results
+        var: rsync_result
