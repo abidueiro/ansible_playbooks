@@ -1,13 +1,16 @@
 ---
 - name: Setup Rsync Backup Script
   hosts: all
-  gather_facts: false
-  vars_files:
-    - /home/semaphore/files/sshkey-vault.yaml
+  gather_facts: true
+  # vars_files:
+  #   - /home/semaphore/files/sshkey-vault.yaml
   vars:
     ssh_key_path: "/home/{{ ansible_user }}/.ssh_kopia/id_rsa"
     local_backup_base: "/home/{{ ansible_user }}/kopia/backups"
   tasks:
+    - name: Include var encrypted file
+      include_vars: /home/semaphore/files/sshkey-vault.yaml
+
     - name: Generate rsync backup script from template
       template:
         src: /home/semaphore/files/rsync_script.j2
