@@ -5,8 +5,9 @@
   vars_files:
     - /home/semaphore/files/sshkey-vault.yaml
 
-  vars:
-    #ssh_key_path: "/home/{{ ansible_user }}/.ssh/id_rsa"
+  # vars:
+  #   ansible_user: ciclica_admin
+  #   ssh_key_path: "/home/{{ ansible_user }}/.ssh/id_rsa"
 
   tasks:
     - name: Include var encrypted file
@@ -26,7 +27,7 @@
         cmd: >
           rsync -avzz
           -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-          --timeout=300
+          --timeout=10800
           --partial
           --progress
           --stats
@@ -39,7 +40,6 @@
       retries: 3
       delay: 60
       until: rsync_result.rc == 0
-      delegate_to: 10.8.0.114
 
     - name: Send Slack notification
       uri:
