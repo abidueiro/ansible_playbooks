@@ -1,45 +1,34 @@
 ---
 - name: Rsync backups from remote servers
   hosts: 10.8.0.114
-  gather_facts: true
+  gather_facts: false
   vars_files:
     - /home/semaphore/files/sshkey-vault.yaml
 
-  # vars:
-  #   ansible_user: ciclica_admin
-  #   ssh_key_path: "/home/{{ ansible_user }}/.ssh/id_rsa"
-
   tasks:
-    - name: Include var encrypted file
-      include_vars: /home/semaphore/files/sshkey-vault.yaml
-
     - name: Ensure specific backup directories exist
       file:
-        path: "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}"
+        path: "/home/ciclica_admin/kopia/backups/{{ item.name }}"
         state: directory
         mode: '0755'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        owner: ciclica_admin
+        group: ciclica_admin
       loop: "{{ ssh_hosts }}"
 
     - name: Rsync backups from remote servers
       command:
         cmd: >
-          rsync -avzz
-          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-          --timeout=10800
-          --partial
-          --progress
-          --stats
-          --human-readable
-          --exclude='.tmp'
-          "{{ item.user }}@{{ item.ip }}:{{ remote_path }}/"
-          "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}/"
+          rsync -avz
+          -e ssh
+          {{ item.user }}@{{ item.ip }}:{{ remote_path }}/
+          /home/ciclica_admin/kopia/backups/{{ item.name }}/
       loop: "{{ ssh_hosts }}"
       register: rsync_result
-      retries: 3
-      delay: 60
-      until: rsync_result.rc == 0
+
+    - name: Display rsync results
+      debug:
+        msg: "Rsync for {{ item.item.name }} ({{ item.item.ip }}) completed with return code {{ item.rc }}"
+      loop: "{{ rsync_result.results }}"
 
     - name: Send Slack notification
       uri:
@@ -50,12 +39,3 @@
           text: "Rsync completed {% if item.rc == 0 %}successfully{% else %}with errors{% endif %} from {{ item.item.name }} ({{ item.item.ip }}) to ~/kopia/backups/{{ item.item.name }}"
       loop: "{{ rsync_result.results }}"
       when: slack_webhook_url is defined
-
-    - name: Display rsync results
-      debug:
-        msg: "Rsync for {{ item.item.name }} ({{ item.item.ip }}) {% if item.rc == 0 %}completed successfully{% else %}encountered an error{% endif %}"
-      loop: "{{ rsync_result.results }}"
-
-    - name: Display rsync command output
-      debug:
-        var: rsync_result
