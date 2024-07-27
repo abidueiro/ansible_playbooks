@@ -8,11 +8,11 @@
   tasks:
     - name: Ensure specific backup directories exist
       file:
-        path: "/home/ciclica_admin/kopia/backups/{{ item.name }}"
+        path: "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}"
         state: directory
         mode: '0755'
-        owner: ciclica_admin
-        group: ciclica_admin
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
       loop: "{{ ssh_hosts }}"
 
     - name: Rsync backups from remote servers
@@ -21,7 +21,7 @@
           rsync -avz
           -e ssh
           {{ item.user }}@{{ item.ip }}:{{ remote_path }}/
-          /home/ciclica_admin/kopia/backups/{{ item.name }}/
+          /home/{{ ansible_user }}/kopia/backups/{{ item.name }}/
       loop: "{{ ssh_hosts }}"
       register: rsync_result
 
