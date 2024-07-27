@@ -1,41 +1,20 @@
 ---
-- name: Rsync backups from remote servers
-  hosts: 10.8.0.114
+- name: Setup Rsync Backup Script
+  hosts: localhost
   gather_facts: false
   vars_files:
     - /home/semaphore/files/sshkey-vault.yaml
-
+  vars:
+    ssh_key_path: "/home/{{ ansible_user }}/.ssh_kopia/id_rsa"
+    local_backup_base: "/home/{{ ansible_user }}/kopia/backups"
   tasks:
-    - name: Ensure specific backup directories exist
-      file:
-        path: "/home/{{ ansible_user }}/kopia/backups/{{ item.name }}"
-        state: directory
+    - name: Generate rsync backup script from template
+      template:
+        src: /home/semaphore/files/rsync_script.j2
+        dest: /home/{{ ansible_user }}/rsync_backup.sh
         mode: '0755'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-      loop: "{{ ssh_hosts }}"
 
-    - name: Rsync backups from remote servers
-      command:
-        cmd: >
-          rsync -avz
-          -e ssh
-          {{ item.user }}@{{ item.ip }}:{{ remote_path }}/
-          /home/{{ ansible_user }}/kopia/backups/{{ item.name }}/
-      loop: "{{ ssh_hosts }}"
-      register: rsync_result
-
-    - name: Display rsync results
+    - name: Display generated script (for debugging)
       debug:
-        msg: "Rsync for {{ item.item.name }} ({{ item.item.ip }}) completed with return code {{ item.rc }}"
-      loop: "{{ rsync_result.results }}"
+        msg: "{{ lookup('file', '/home/{{ ansible_user }}/rsync_backup.sh') }}"
 
-    - name: Send Slack notification
-      uri:
-        url: "{{ slack_webhook_url }}"
-        method: POST
-        body_format: json
-        body:
-          text: "Rsync completed {% if item.rc == 0 %}successfully{% else %}with errors{% endif %} from {{ item.item.name }} ({{ item.item.ip }}) to ~/kopia/backups/{{ item.item.name }}"
-      loop: "{{ rsync_result.results }}"
-      when: slack_webhook_url is defined
