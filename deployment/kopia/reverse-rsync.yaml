@@ -26,7 +26,7 @@
         cmd: >
           rsync -avzz
           -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-          --timeout=10800
+          --timeout=300
           --partial
           --progress
           --stats
