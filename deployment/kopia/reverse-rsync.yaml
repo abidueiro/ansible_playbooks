@@ -1,6 +1,6 @@
 ---
 - name: Setup Rsync Backup Script
-  hosts: localhost
+  hosts: all
   gather_facts: false
   vars_files:
     - /home/semaphore/files/sshkey-vault.yaml
