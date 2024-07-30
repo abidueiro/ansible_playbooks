@@ -9,7 +9,8 @@
     local_backup_base: "/home/{{ ansible_user }}/kopia/backups"
   tasks:
     - name: Include var encrypted file
-      include_vars: /home/semaphore/files/sshkey-vault.yaml
+      # include_vars: /home/semaphore/files/sshkey-vault.yaml
+      include_vars: /home/semaphore/sshkey-vault.yaml
 
     - name: Generate rsync backup script from template
       template:
