@@ -17,7 +17,7 @@
         dest: /home/{{ ansible_user }}/rsync_backup.sh
         mode: '0755'
 
-    - name: Display generated script (for debugging)
-      debug:
-        msg: "{{ lookup('file', '/home/{{ ansible_user }}/rsync_backup.sh') }}"
+    # - name: Display generated script (for debugging)
+    #   debug:
+    #     msg: "{{ lookup('file', '/home/{{ ansible_user }}/rsync_backup.sh') }}"
 
