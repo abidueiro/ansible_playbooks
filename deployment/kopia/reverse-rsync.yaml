@@ -17,11 +17,11 @@
         state: directory
         mode: '0700'
 
-    - name: Copy SSH private key
-      copy:
-        content: "{{ ssh_private_key }}"
-        dest: "{{ ssh_key_path }}"
-        mode: '0600'
+    # - name: Copy SSH private key
+    #   copy:
+    #     content: "{{ ssh_private_key }}"
+    #     dest: "{{ ssh_key_path }}"
+    #     mode: '0600'
 
     - name: Generate rsync backup script from template
       template:
